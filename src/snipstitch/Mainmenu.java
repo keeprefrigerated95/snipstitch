@@ -1,3 +1,8 @@
+/***********************************************************
+ * MAIN MENU
+ * The menu that the user will so on opening the program
+ * will have options to edit a video, or make an xml file
+ ***********************************************************/
 package snipstitch;
 
 import java.awt.*;
@@ -13,6 +18,7 @@ public class Mainmenu {
 	Loadermenu loaderMenu;
 	
 	public Mainmenu() {
+		//the main frame
 		frame = new JFrame("Snip-Stitch");
 		frame.setLayout(new GridLayout(3, 4));
 		frame.setResizable(false);
@@ -20,10 +26,11 @@ public class Mainmenu {
 		frame.setSize(420, 420);
 		frame.setVisible(true);
 		
+		//welcome message
 		JLabel welcome = new JLabel("Welcome to Snip-Stitch");
 		frame.add(welcome);
 		
-		
+		//button that takes you to the video editing menu
 		loaderButton = new JButton();
 		loaderButton.setPreferredSize(new Dimension(50, 50));
 		loaderButton.setText("Edit a Video");

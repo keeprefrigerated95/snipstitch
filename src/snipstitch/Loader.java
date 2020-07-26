@@ -10,6 +10,7 @@ public class Loader {
 		
 	}
 	
+	//opens xml and loads to snippets vector
 	public void uploadSnippets(String filename) {
 		
 	}

@@ -3,27 +3,51 @@ package snipstitch;
 
 public class Snippet {
 	
-	private Double startTime;
-	private Double stopTime;
+	private int startHour;
+	private int startMinute;
+	private int startSecond;
+	private int endHour;
+	private int endMinute;
+	private int endSecond;
 	
 	public Snippet() {
 		
 	}
 
-	public Double getStartTime() {
-		return startTime;
+	//gets the times and converts into compatible string
+	public String getStartTime() {
+		String returnString = startHour + ":" + startMinute + ":" + startSecond; 
+		return returnString;
 	}
 	
-	public Double getStopTime() {
-		return stopTime;
+	public String getEndTime() {
+		String returnString = endHour + ":" + endMinute + ":" + endSecond;
+		return returnString;
 	}
 	
-	public void setStartTime(Double newStart) {
-		startTime = newStart;
+	//setters
+	public void setStartHour(int newStartHour) {
+		startHour = newStartHour;
 	}
 	
-	public void setStopTime(Double newStop) {
-		stopTime = newStop;
+	public void setStartMinute(int newStartMinute) {
+		startMinute = newStartMinute;
+	}
+	
+	public void setStartSecond(int newStartSecond) {
+		startSecond = newStartSecond;
+	}
+	
+	public void setEndHour(int newEndHour) {
+		endHour = newEndHour;
+	}
+	
+	public void setEndMinute(int newEndMinute) {
+		endMinute = newEndMinute;
+	}
+	
+	public void setEndSecond(int newEndSecond) {
+		endSecond = newEndSecond;
 	}
 	
 }
