@@ -3,6 +3,7 @@ package snipstitch;
 
 public class Snippet {
 	
+	private String description;
 	private int startHour;
 	private int startMinute;
 	private int startSecond;
@@ -13,7 +14,17 @@ public class Snippet {
 	public Snippet() {
 		
 	}
-
+	 
+	public Snippet(String newDesc, int newStSec, int newStMin, int newStHr, int newEndSec, int newEndMin, int newEndHr) {
+		description = newDesc;
+		startSecond = newStSec;
+		startMinute = newStMin;
+		startHour = newStHr;
+		endSecond = newEndSec;
+		endMinute = newEndMin;
+		endHour = newEndHr;
+	}
+	
 	//gets the times and converts into compatible string
 	public String getStartTime() {
 		String returnString = startHour + ":" + startMinute + ":" + startSecond; 
@@ -23,6 +34,11 @@ public class Snippet {
 	public String getEndTime() {
 		String returnString = endHour + ":" + endMinute + ":" + endSecond;
 		return returnString;
+	}
+	
+	//getters
+	public String getDescription() {
+		return description;
 	}
 	
 	//setters
