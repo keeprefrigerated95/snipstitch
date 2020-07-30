@@ -103,15 +103,26 @@ public class Loadermenu {
 		editVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editor = new Editor(xmlFilepath, videoFilepath);
+				
+				//load the snippets
 				try {
-					System.out.println("HELLO");
 					editor.uploadSnippets();
-					System.out.println("HELLO2");
 				} catch (ParserConfigurationException | SAXException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				editor.displaySnippets();
+				//editor.displaySnippets();
+				
+				//snip out the clips from the original video
+				try {
+					editor.snip();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		frame.add(editVideo);
