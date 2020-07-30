@@ -57,50 +57,53 @@ public class Editor {
 		
 	}
 	
-	public void snipStitch() {
-		
+	public void snipStitch() {	
 	}
 	
 	//snips out all the clips from the main video
 	public void snip() throws IOException, InterruptedException {
 		
 		for(int i = 0; i < snippets.size(); i++) {
+			//https://stackoverflow.com/questions/9885643/ffmpeg-executed-from-javas-processbuilder-does-not-return-under-windows-7/9885717#9885717
 			//ffmpeg -i 20sec.mp4 -ss 0:0:1 -to 0:0:5 -c copy foobar.mp4
-			//https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f
-			//ffmpeg cat foobar.mpg foobar.mpg > foobar2.mpg
-			String command = "ffmpeg -i " + videoName + " -ss " + snippets.get(i).getStartTime() +
-					" -to " + snippets.get(i).getEndTime() + " -c copy hominahomina" + i + ".mp4";
-			
 			String newFile = "foobar" + String.valueOf(i) + ".mp4";
 			ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", videoName, "-ss",
 					snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
 			processBuilder.start();
-			
-			/*
-			String input = "cmd /c start ffmpeg.exe /K" + command + " /K \"Start\"";
-			
-			try
-	        { 
-	            // Just one line and you are done !  
-	            // We have given a command to start cmd 
-	            // /K : Carries out command specified by string 
-	           Runtime.getRuntime().exec(new String[] {input}); 
-	  
-	        } 
-	        catch (Exception e) 
-	        { 
-	            System.out.println("HEY Buddy ! U r Doing Something Wrong "); 
-	            e.printStackTrace(); 
-	        }
-	        */
+			vidsToStitch.add(newFile);
+			System.out.println("Snip " + i + "\n");
 		}
-			
 	}
 	
-	public void stitch() {
+	public void stitch() throws IOException {
+		//https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f
+		String inputSnips = new String(); //for the final ffmpeg params
 		for(int i = 0; i < vidsToStitch.size(); i++) {
+			String intermediate = "intermediate" + String.valueOf(i) + ".mpg";
+			ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", vidsToStitch.get(i), "-qscale:v", "1",
+					intermediate);
+			processBuilder.start();
 			
+			//if its on the last iter don't put a "|"
+			if(i == vidsToStitch.size() - 1) {
+				inputSnips += intermediate;
+			}
+			
+			else {
+				inputSnips += intermediate + "|";
+			}
+			System.out.println("Stich " + i + "\n");
 		}
+		
+		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", "concat:\"" + inputSnips + "\"",
+				"-c", "copy", "intermediate_all.mpg");
+		processBuilder.start();
+		
+		ProcessBuilder finalPb = new ProcessBuilder("ffmpeg", "-i", "intermediate_all.mpg", "-qscale:v", "2",
+				"editedVideo.mp4");
+		finalPb.start();
+	
+		System.out.println("All done!");
 	}
 	
 	public void displaySnippets() {

@@ -123,6 +123,15 @@ public class Loadermenu {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
+				//stitch the snipped slips back together
+				try {
+					editor.stitch();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		frame.add(editVideo);
