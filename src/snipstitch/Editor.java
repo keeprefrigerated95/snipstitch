@@ -12,7 +12,7 @@ public class Editor {
 	Vector<Snippet> snippets = new Vector<>();
 	String xmlName;
 	String videoName;
-	Vector<String> vidsToStitch = new Vector<>();
+	String stitchFiles = new String("concat:\"");
 	
 	public Editor () {
 		
@@ -69,40 +69,41 @@ public class Editor {
 			String newFile = "foobar" + String.valueOf(i) + ".mp4";
 			ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", videoName, "-ss",
 					snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
-			processBuilder.start();
-			vidsToStitch.add(newFile);
-			System.out.println("Snip " + i + "\n");
-		}
-	}
-	
-	public void stitch() throws IOException {
-		//https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f
-		String inputSnips = new String(); //for the final ffmpeg params
-		for(int i = 0; i < vidsToStitch.size(); i++) {
-			String intermediate = "intermediate" + String.valueOf(i) + ".mpg";
-			ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", vidsToStitch.get(i), "-qscale:v", "1",
-					intermediate);
-			processBuilder.start();
 			
-			//if its on the last iter don't put a "|"
-			if(i == vidsToStitch.size() - 1) {
-				inputSnips += intermediate;
+			//I tried this first and then added in the process/process.waitfor below
+			//processBuilder.start();
+			
+			Process process = processBuilder.inheritIO().start();
+			//Process process = processBuilder.start();
+		    process.waitFor();
+		    //assertEquals("No errors should be detected", 0, exitCode);
+			
+			System.out.println("Snip " + i + "\n");
+			
+			//add to the formatted list of files to be concat later
+			if(i == snippets.size() - 1) {
+				stitchFiles += newFile + "\"";
 			}
 			
 			else {
-				inputSnips += intermediate + "|";
+				stitchFiles += newFile + "|";
 			}
-			System.out.println("Stich " + i + "\n");
 		}
 		
-		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", "concat:\"" + inputSnips + "\"",
-				"-c", "copy", "intermediate_all.mpg");
-		processBuilder.start();
-		
-		ProcessBuilder finalPb = new ProcessBuilder("ffmpeg", "-i", "intermediate_all.mpg", "-qscale:v", "2",
-				"editedVideo.mp4");
-		finalPb.start();
+		System.out.println(stitchFiles);
+	}
 	
+	public void stitch() throws IOException, InterruptedException {
+		//https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f
+		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", stitchFiles,
+				"-c", "copy", "stitchedVids.mpg");
+		Process process = processBuilder.inheritIO().start();
+	    process.waitFor();
+		
+	    ProcessBuilder finalPb = new ProcessBuilder("ffmpeg", "-i", "stitchedVids.mpg", "-qscale:v", "2", "finalVid.mp4");
+	    Process finalP = finalPb.inheritIO().start();
+	    finalP.waitFor();
+	    
 		System.out.println("All done!");
 	}
 	
