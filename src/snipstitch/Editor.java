@@ -13,6 +13,7 @@ public class Editor {
 	String xmlName;
 	String videoName;
 	String stitchFiles = new String("concat:\"");
+	Vector<String> filesToStitch = new Vector<>();
 	
 	public Editor () {
 		
@@ -81,6 +82,8 @@ public class Editor {
 			System.out.println("Snip " + i + "\n");
 			
 			//add to the formatted list of files to be concat later
+			filesToStitch.add(newFile);
+			/*
 			if(i == snippets.size() - 1) {
 				stitchFiles += newFile + "\"";
 			}
@@ -88,22 +91,62 @@ public class Editor {
 			else {
 				stitchFiles += newFile + "|";
 			}
+			*/
 		}
 		
-		System.out.println(stitchFiles);
+		//System.out.println(stitchFiles);
 	}
 	
 	public void stitch() throws IOException, InterruptedException {
+		//create txt file with mp4 files to concatenate
+		//https://www.w3schools.com/java/java_files_create.asp
+		String fileName = "snippetsList.txt";
+		try {
+		      File snippetsTxt = new File(fileName);
+		      FileWriter writer = new FileWriter(fileName);
+		      
+		      for(int i = 0; i < filesToStitch.size(); i++) {
+		    	  
+		    	  if(i == filesToStitch.size() - 1) {
+		    		  writer.write("file '" + filesToStitch.get(i) + "'");
+		    	  }
+		    	  
+		    	  else {
+		    		  writer.write("file '" + filesToStitch.get(i) + "'\n");
+		    	  }
+		      }
+		      
+		      writer.close();
+		      
+		      /*
+		      if (snippetsTxt.createNewFile()) {
+		          System.out.println("File created: " + snippetsTxt.getName());
+		        } else {
+		          System.out.println("File already exists.");
+		        }
+		        */
+		} catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		      }
+		 //https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
+		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-f", "concat", "-safe",
+				 "0", "-i", fileName, "-c", "copy", "finalVideo.mp4");
+		Process process = processBuilder.inheritIO().start();
+		process.waitFor();
+		
+		/*
 		//https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f
 		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", stitchFiles,
-				"-c", "copy", "stitchedVids.mpg");
+				"-codec", "copy", "stitchedVids.mpg");
 		Process process = processBuilder.inheritIO().start();
 	    process.waitFor();
 		
-	    ProcessBuilder finalPb = new ProcessBuilder("ffmpeg", "-i", "stitchedVids.mpg", "-qscale:v", "2", "finalVid.mp4");
+	    //ProcessBuilder finalPb = new ProcessBuilder("ffmpeg", "-i", "stitchedVids.mpg", "-qscale:v", "2", "finalVid.mp4");
+	    ProcessBuilder finalPb = new ProcessBuilder("ffmpeg", "-i", "stitchedVids.mpg", "finalVid.mp4");
 	    Process finalP = finalPb.inheritIO().start();
 	    finalP.waitFor();
-	    
+	    */
 		System.out.println("All done!");
 	}
 	
