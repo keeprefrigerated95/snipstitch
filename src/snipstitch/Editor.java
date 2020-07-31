@@ -14,6 +14,7 @@ public class Editor {
 	String videoName;
 	String stitchFiles = new String("concat:\"");
 	Vector<String> filesToStitch = new Vector<>();
+	Vector<String> filesToDelete = new Vector<>();
 	
 	public Editor () {
 		
@@ -41,12 +42,17 @@ public class Editor {
 		    	if (node.getNodeType() == Node.ELEMENT_NODE) {
 		    		Element elem = (Element) node;
 		    		String description = elem.getElementsByTagName("description").item(0).getChildNodes().item(0).getNodeValue();
-	        		int startSecond = Integer.parseInt(elem.getElementsByTagName("startSecond").item(0).getChildNodes().item(0).getNodeValue());
-	        		int startMinute = Integer.parseInt(elem.getElementsByTagName("startMinute").item(0).getChildNodes().item(0).getNodeValue());
-	        		int startHour = Integer.parseInt(elem.getElementsByTagName("startHour").item(0).getChildNodes().item(0).getNodeValue());
-	        		int endSecond = Integer.parseInt(elem.getElementsByTagName("endSecond").item(0).getChildNodes().item(0).getNodeValue());
-	        		int endMinute = Integer.parseInt(elem.getElementsByTagName("endMinute").item(0).getChildNodes().item(0).getNodeValue());
-	        		int endHour = Integer.parseInt(elem.getElementsByTagName("endHour").item(0).getChildNodes().item(0).getNodeValue());
+		    		//start time
+	        		int startHour = Integer.parseInt(elem.getElementsByTagName("sHr").item(0).getChildNodes().item(0).getNodeValue());
+	        		int startMinute = Integer.parseInt(elem.getElementsByTagName("sMin").item(0).getChildNodes().item(0).getNodeValue());
+	        		int startSecond = Integer.parseInt(elem.getElementsByTagName("sSec").item(0).getChildNodes().item(0).getNodeValue());
+	        		
+	        		//end time
+	        		int endHour = Integer.parseInt(elem.getElementsByTagName("eHr").item(0).getChildNodes().item(0).getNodeValue());
+	        		int endMinute = Integer.parseInt(elem.getElementsByTagName("eMin").item(0).getChildNodes().item(0).getNodeValue());
+	        		int endSecond = Integer.parseInt(elem.getElementsByTagName("eSec").item(0).getChildNodes().item(0).getNodeValue());
+
+
 	        		snippets.add(new Snippet(description, startSecond, startMinute, startHour, endSecond, endMinute, endHour));
 		    	}
 		    }
@@ -81,17 +87,9 @@ public class Editor {
 			
 			System.out.println("Snip " + i + "\n");
 			
-			//add to the formatted list of files to be concat later
+			//add to the list of files to be concat later
 			filesToStitch.add(newFile);
-			/*
-			if(i == snippets.size() - 1) {
-				stitchFiles += newFile + "\"";
-			}
-			
-			else {
-				stitchFiles += newFile + "|";
-			}
-			*/
+			filesToDelete.add(newFile);
 		}
 		
 		//System.out.println(stitchFiles);
@@ -101,6 +99,7 @@ public class Editor {
 		//create txt file with mp4 files to concatenate
 		//https://www.w3schools.com/java/java_files_create.asp
 		String fileName = "snippetsList.txt";
+		filesToDelete.add(fileName);
 		try {
 		      File snippetsTxt = new File(fileName);
 		      FileWriter writer = new FileWriter(fileName);
@@ -118,36 +117,36 @@ public class Editor {
 		      
 		      writer.close();
 		      
-		      /*
-		      if (snippetsTxt.createNewFile()) {
-		          System.out.println("File created: " + snippetsTxt.getName());
-		        } else {
-		          System.out.println("File already exists.");
-		        }
-		        */
 		} catch (IOException e) {
 		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		      }
-		 //https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
+		//concatinate the files
+		//https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
 		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-f", "concat", "-safe",
 				 "0", "-i", fileName, "-c", "copy", "finalVideo.mp4");
 		Process process = processBuilder.inheritIO().start();
 		process.waitFor();
-		
-		/*
-		//https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f
-		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", stitchFiles,
-				"-codec", "copy", "stitchedVids.mpg");
-		Process process = processBuilder.inheritIO().start();
-	    process.waitFor();
-		
-	    //ProcessBuilder finalPb = new ProcessBuilder("ffmpeg", "-i", "stitchedVids.mpg", "-qscale:v", "2", "finalVid.mp4");
-	    ProcessBuilder finalPb = new ProcessBuilder("ffmpeg", "-i", "stitchedVids.mpg", "finalVid.mp4");
-	    Process finalP = finalPb.inheritIO().start();
-	    finalP.waitFor();
-	    */
+
 		System.out.println("All done!");
+	}
+	
+	//delete unwanted files
+	public void cleanup() {
+		
+		for(int i = 0; i < filesToDelete.size(); i++) {
+			File deleteThis = new File(filesToDelete.get(i));
+			
+			try {
+				deleteThis.delete();
+			}
+			
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+
 	}
 	
 	public void displaySnippets() {

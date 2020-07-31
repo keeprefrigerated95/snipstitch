@@ -111,7 +111,6 @@ public class Loadermenu {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				//editor.displaySnippets();
 				
 				//snip out the clips from the original video
 				try {
@@ -135,6 +134,8 @@ public class Loadermenu {
 					e1.printStackTrace();
 				}
 				
+				//delete unwanted files
+				editor.cleanup();
 			}
 		});
 		frame.add(editVideo);
