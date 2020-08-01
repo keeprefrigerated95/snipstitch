@@ -9,6 +9,7 @@ import javax.xml.parsers.*;
 import java.io.*;
 
 public class Editor {
+	OperatingSys OS;
 	Vector<Snippet> snippets = new Vector<>();
 	String xmlName;
 	String videoName;
@@ -56,15 +57,10 @@ public class Editor {
 	        		snippets.add(new Snippet(description, startSecond, startMinute, startHour, endSecond, endMinute, endHour));
 		    	}
 		    }
-		    
-		    
 		} catch (Exception e) {
 	        e.printStackTrace();
 	       }
 		
-	}
-	
-	public void snipStitch() {	
 	}
 	
 	//snips out all the clips from the main video
@@ -76,14 +72,9 @@ public class Editor {
 			String newFile = "foobar" + String.valueOf(i) + ".mp4";
 			ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", videoName, "-ss",
 					snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
-			
-			//I tried this first and then added in the process/process.waitfor below
-			//processBuilder.start();
-			
+						
 			Process process = processBuilder.inheritIO().start();
-			//Process process = processBuilder.start();
 		    process.waitFor();
-		    //assertEquals("No errors should be detected", 0, exitCode);
 			
 			System.out.println("Snip " + i + "\n");
 			
@@ -103,7 +94,7 @@ public class Editor {
 		try {
 		      File snippetsTxt = new File(fileName);
 		      FileWriter writer = new FileWriter(fileName);
-		      
+		      //makes the txt file with files to concatenate
 		      for(int i = 0; i < filesToStitch.size(); i++) {
 		    	  
 		    	  if(i == filesToStitch.size() - 1) {
@@ -121,7 +112,7 @@ public class Editor {
 		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		      }
-		//concatinate the files
+		//concatenate the files
 		//https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
 		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-f", "concat", "-safe",
 				 "0", "-i", fileName, "-c", "copy", "finalVideo.mp4");
@@ -145,8 +136,6 @@ public class Editor {
 				e.printStackTrace();
 			}
 		}
-		
-
 	}
 	
 	public void displaySnippets() {

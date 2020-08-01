@@ -40,6 +40,8 @@ public class Loadermenu {
 	
 	public Loadermenu() {
 		
+		
+		
 		//the main frame
 		frame.setSize(400, 400);
 		frame.setLayout(new GridLayout(3, 4));
