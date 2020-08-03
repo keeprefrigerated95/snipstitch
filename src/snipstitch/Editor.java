@@ -63,6 +63,7 @@ public class Editor {
 		
 	}
 	
+	/*
 	//snips out all the clips from the main video
 	public void snip() throws IOException, InterruptedException {
 		
@@ -83,6 +84,59 @@ public class Editor {
 			filesToDelete.add(newFile);
 		}
 		
+		//System.out.println(stitchFiles);
+	}
+	*/
+	
+	//snips out all the clips from the main video
+	public void snip() throws IOException, InterruptedException {
+		
+		for(int i = 0; i < snippets.size(); i++) {
+			//https://stackoverflow.com/questions/9885643/ffmpeg-executed-from-javas-processbuilder-does-not-return-under-windows-7/9885717#9885717
+			//ffmpeg -i 20sec.mp4 -ss 0:0:1 -to 0:0:5 -c copy foobar.mp4
+			String newFile = "foobar" + String.valueOf(i) + ".mp4";
+			
+			if(OS.isWindows()) {
+				//https://superuser.com/questions/42537/is-there-any-sudo-command-for-windows
+				ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", videoName, "-ss",
+						snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
+							
+				Process process = processBuilder.inheritIO().start();
+			    process.waitFor();
+			    System.out.println("Win Snip " + i + "\n");
+			}
+			
+			else if (OS.isMac()) {
+				//FFMPEG LOCATION: /usr/local/Cellar/ffmpeg
+				//THE ERROR: sudo: ffmpeg: command not found
+				//ERROR W/OUT SUDO: java.io.IOException: Cannot run program "ffmpeg": error=2, No such file or directory
+				ProcessBuilder processBuilder = new ProcessBuilder("sudo", "-S", "ffmpeg", "-f", videoName, "-ss",
+						snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
+				
+				Process process = processBuilder.inheritIO().start();
+			    process.waitFor();
+			    System.out.println("Mac Snip " + i + "\n");
+			}
+			
+			else if (OS.isUnix()) {
+				System.out.println("Your operating system is not supported");
+				//TODO
+				//need to figure out if deb/red hat/whatever are different
+			}
+			
+			else if (OS.isSolaris()) {
+				System.out.println("Your operating system is not supported yet");
+				//TODO probably won't do
+			}
+			
+			else {
+				 System.out.println("Your operating system is not supported");
+			}
+			//add to the list of files to be concat later
+			filesToStitch.add(newFile);
+			filesToDelete.add(newFile);
+			
+		}
 		//System.out.println(stitchFiles);
 	}
 	
@@ -118,7 +172,7 @@ public class Editor {
 				 "0", "-i", fileName, "-c", "copy", "finalVideo.mp4");
 		Process process = processBuilder.inheritIO().start();
 		process.waitFor();
-
+		
 		System.out.println("All done!");
 	}
 	
