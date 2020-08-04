@@ -21,34 +21,43 @@ public class Mainmenu {
 			public void run() {
 				
 				JFrame frame = new JFrame("Snip-Stitch");
-				JLabel welcome = new JLabel("Welcome to Snip-Stitch");
-				JButton loaderButton = new JButton();
-				
-				//the main frame
-				frame.setLayout(new GridLayout(3, 4));
+				frame.setBounds(100, 100, 450, 300);
 				frame.setResizable(false);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setSize(420, 420);
 				frame.setVisible(true);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				
+				JPanel panel = new JPanel();
+				frame.getContentPane().add(panel, BorderLayout.CENTER);
+				panel.setLayout(null);
 				
 				//welcome message
-				frame.add(welcome);
+				JLabel welcome = new JLabel("Welcome to Snip-Stitch");
+				welcome.setFont(new Font("Verdana", Font.PLAIN, 23));
+				welcome.setBounds(77, 11, 282, 36);
+				panel.add(welcome);
 				
-				//button that takes you to the video editing menu
-				loaderButton.setPreferredSize(new Dimension(50, 50));
-				loaderButton.setText("Edit a Video");
+				//go do the loading/editor page
+				JButton loaderButton = new JButton("Edit a Video");
+				loaderButton.setBounds(158, 91, 100, 30);
 				loaderButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						frame.setVisible(false);
 						Loadermenu loaderMenu = new Loadermenu();
 					}
 				});
-				frame.add(loaderButton);
-			}
-			
-		});
-		
-
+				panel.add(loaderButton);
 				
+				//go to settings
+				JButton settingsButton = new JButton("Settings");
+				settingsButton.setBounds(158, 149, 100, 30);
+				settingsButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						//frame.setVisible(false);
+						//Loadermenu loaderMenu = new Loadermenu();
+					}
+				});
+				panel.add(settingsButton);					
+			}
+		});	
 	}
 }

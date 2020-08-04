@@ -7,6 +7,7 @@
 
 package snipstitch;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -18,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileSystemView;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -25,59 +27,30 @@ import org.xml.sax.SAXException;
 
 public class Loadermenu {
 	
-	JFrame frame = new JFrame("Snip-Stitch");
-	JButton findXml = new JButton();
 	JLabel chosenXml = new JLabel("No XML selected");
 	String xmlFilepath = new String("NONE");
-	JButton loadVideo = new JButton();
 	JLabel chosenVideo = new JLabel("No Video Selected");
 	String videoFilepath = new String("NONE");
-	JButton goBack = new JButton();
-	JButton editVideo = new JButton();
-	Mainmenu mainMenu;
+	JLabel loadingMessage = new JLabel("Awaiting Input...");
 	JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 	Editor editor;
 	
 	public Loadermenu() {
-		
-		
-		
 		//the main frame
-		frame.setSize(400, 400);
-		frame.setLayout(new GridLayout(3, 4));
+		JFrame frame = new JFrame("Snip-Stitch");
+		frame.setBounds(100, 100, 487, 216);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		
-		//find xml button
-		findXml.setPreferredSize(new Dimension(50, 50));
-		findXml.setText("Find XML");
-		findXml.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//fileChooser
-				
-				// invoke the showsSaveDialog function to show the save dialog 
-	            int r = fileChooser.showOpenDialog(null);
-	            
-	            if (r == JFileChooser.APPROVE_OPTION) { 
-	                // set the label to the path of the selected directory 
-	                xmlFilepath = fileChooser.getSelectedFile().getAbsolutePath();
-	                chosenXml.setText(xmlFilepath);
-	            } 
-	            // if the user cancelled the operation 
-	            else {}
-	                //chosenXml.setText("the user cancelled the operation"); 
-			}
-		});
-		frame.add(findXml);
-		
-		//displays the chosen xml file
-		frame.add(chosenXml);
+		//the panel
+		JPanel panel = new JPanel();
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
 		
 		//find the video file
-		//loadVideo = new JButton();
-		loadVideo.setPreferredSize(new Dimension(50, 50));
-		loadVideo.setText("Find Video");
+		JButton loadVideo = new JButton("Find Video");
+		loadVideo.setBounds(10, 11, 100, 30);
 		loadVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//fileChooser
@@ -94,14 +67,34 @@ public class Loadermenu {
 	                //chosenVideo.setText("the user cancelled the operation"); 
 			}
 		});
-		frame.add(loadVideo);
-		
-		//displays chosen video file
-		frame.add(chosenVideo);
+		panel.add(loadVideo);
+
+		//find xml button
+		JButton findXml = new JButton("Find XML");
+		findXml.setBounds(10, 52, 100, 30);
+		findXml.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//fileChooser
+				
+				// invoke the showsSaveDialog function to show the save dialog 
+	            int r = fileChooser.showOpenDialog(null);
+	            
+	            if (r == JFileChooser.APPROVE_OPTION) { 
+	                // set the label to the path of the selected directory 
+	                xmlFilepath = fileChooser.getSelectedFile().getAbsolutePath();
+	                chosenXml.setText(xmlFilepath);
+	            	
+	            } 
+	            // if the user cancelled the operation 
+	            else {}
+	                //chosenXml.setText("the user cancelled the operation"); 
+			}
+		});
+		panel.add(findXml);
 		
 		//Edit Video!
-		editVideo.setPreferredSize(new Dimension(50, 50));
-		editVideo.setText("Edit Video!");
+		JButton editVideo = new JButton("Edit Video");
+		editVideo.setBounds(10, 93, 100, 30);
 		editVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editor = new Editor(xmlFilepath, videoFilepath);
@@ -115,42 +108,65 @@ public class Loadermenu {
 				}
 				
 				//snip out the clips from the original video
+				loadingMessage.setText("Snipping the Video...");
 				try {
 					editor.snip();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
+					loadingMessage.setText("Error Snipping: IOException");
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
+					loadingMessage.setText("Error Snipping: Interrupted Exception");
 					e1.printStackTrace();
 				}
+				loadingMessage.setText("Snipping Finished!");
 				
 				//stitch the snipped slips back together
+				loadingMessage.setText("Stitching it back together...");
 				try {
 					editor.stitch();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
+					loadingMessage.setText("Error Stitching: IOException Exception");
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
+					loadingMessage.setText("Error stitching: Interrupted Exception");
 					e1.printStackTrace();
 				}
-				
+				loadingMessage.setText("Stitching Finished!");
 				//delete unwanted files
+				loadingMessage.setText("Sweeping up the snippets...");
 				editor.cleanup();
+				loadingMessage.setText("All done!");
 			}
 		});
-		frame.add(editVideo);
+		panel.add(editVideo);
 		
 		//the button to go back to the main menu
-		goBack.setPreferredSize(new Dimension(50, 50));
-		goBack.setText("Go Back");
+		JButton goBack = new JButton("Go Back");
+		goBack.setBounds(10, 134, 100, 30);
 		goBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
-				mainMenu = new Mainmenu();
+				Mainmenu mainMenu = new Mainmenu();
 			}
 		});
-		frame.add(goBack);
+		panel.add(goBack);
+		
+		//displays chosen video file
+		chosenVideo.setBounds(146, 19, 301, 14);
+		panel.add(chosenVideo);
+				
+		//displays the chosen xml file
+		chosenXml.setBounds(146, 60, 301, 14);
+		panel.add(chosenXml);
+		
+		//state of loading
+		loadingMessage.setBounds(146, 101, 301, 14);
+		panel.add(loadingMessage);
+		
+		
 	}
 }
