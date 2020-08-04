@@ -31,14 +31,13 @@ public class Loadermenu {
 	String xmlFilepath = new String("NONE");
 	JLabel chosenVideo = new JLabel("No Video Selected");
 	String videoFilepath = new String("NONE");
-	JLabel loadingMessage = new JLabel("Awaiting Input...");
 	JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 	Editor editor;
 	
 	public Loadermenu() {
 		//the main frame
 		JFrame frame = new JFrame("Snip-Stitch");
-		frame.setBounds(100, 100, 487, 216);
+		frame.setBounds(100, 100, 487, 186);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -91,14 +90,13 @@ public class Loadermenu {
 			}
 		});
 		panel.add(findXml);
-		
+				
 		//Edit Video!
 		JButton editVideo = new JButton("Edit Video");
 		editVideo.setBounds(10, 93, 100, 30);
 		editVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editor = new Editor(xmlFilepath, videoFilepath);
-				
 				//load the snippets
 				try {
 					editor.uploadSnippets();
@@ -108,45 +106,35 @@ public class Loadermenu {
 				}
 				
 				//snip out the clips from the original video
-				loadingMessage.setText("Snipping the Video...");
 				try {
 					editor.snip();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					loadingMessage.setText("Error Snipping: IOException");
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
-					loadingMessage.setText("Error Snipping: Interrupted Exception");
 					e1.printStackTrace();
 				}
-				loadingMessage.setText("Snipping Finished!");
 				
 				//stitch the snipped slips back together
-				loadingMessage.setText("Stitching it back together...");
 				try {
 					editor.stitch();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					loadingMessage.setText("Error Stitching: IOException Exception");
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
-					loadingMessage.setText("Error stitching: Interrupted Exception");
 					e1.printStackTrace();
 				}
-				loadingMessage.setText("Stitching Finished!");
 				//delete unwanted files
-				loadingMessage.setText("Sweeping up the snippets...");
 				editor.cleanup();
-				loadingMessage.setText("All done!");
 			}
 		});
 		panel.add(editVideo);
 		
 		//the button to go back to the main menu
 		JButton goBack = new JButton("Go Back");
-		goBack.setBounds(10, 134, 100, 30);
+		goBack.setBounds(146, 93, 100, 30);
 		goBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
@@ -162,11 +150,5 @@ public class Loadermenu {
 		//displays the chosen xml file
 		chosenXml.setBounds(146, 60, 301, 14);
 		panel.add(chosenXml);
-		
-		//state of loading
-		loadingMessage.setBounds(146, 101, 301, 14);
-		panel.add(loadingMessage);
-		
-		
 	}
 }
