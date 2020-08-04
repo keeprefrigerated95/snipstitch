@@ -47,6 +47,7 @@ public class Mainmenu {
 				});
 				panel.add(loaderButton);
 				
+				/*
 				//go to settings
 				JButton settingsButton = new JButton("Settings");
 				settingsButton.setBounds(158, 149, 100, 30);
@@ -56,7 +57,8 @@ public class Mainmenu {
 						//Loadermenu loaderMenu = new Loadermenu();
 					}
 				});
-				panel.add(settingsButton);					
+				panel.add(settingsButton);
+				*/				
 			}
 		});	
 	}

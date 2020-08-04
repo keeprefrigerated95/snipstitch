@@ -95,7 +95,13 @@ public class Editor {
 			//https://stackoverflow.com/questions/9885643/ffmpeg-executed-from-javas-processbuilder-does-not-return-under-windows-7/9885717#9885717
 			//ffmpeg -i 20sec.mp4 -ss 0:0:1 -to 0:0:5 -c copy foobar.mp4
 			String newFile = "foobar" + String.valueOf(i) + ".mp4";
-			
+			//https://superuser.com/questions/42537/is-there-any-sudo-command-for-windows
+			ProcessBuilder processBuilder = new ProcessBuilder(Settings.ffmpegPath, "-i", videoName, "-ss",
+					snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
+						
+			Process process = processBuilder.inheritIO().start();
+		    process.waitFor();
+			/*
 			if(OS.isWindows()) {
 				//https://superuser.com/questions/42537/is-there-any-sudo-command-for-windows
 				ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", videoName, "-ss",
@@ -132,6 +138,7 @@ public class Editor {
 			else {
 				 System.out.println("Your operating system is not supported");
 			}
+			*/
 			//add to the list of files to be concat later
 			filesToStitch.add(newFile);
 			filesToDelete.add(newFile);
