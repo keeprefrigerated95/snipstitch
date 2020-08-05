@@ -166,14 +166,14 @@ public class Loadermenu {
 		panel.add(chosenXml);
 		
 		//chooses a filetype
-		JLabel lblNewLabel_1 = new JLabel("Non-Default ffmpeg directory (probably not needed)");
+		JLabel lblNewLabel_1 = new JLabel("Path to ffmpeg");
 		lblNewLabel_1.setBounds(10, 147, 262, 14);
 		panel.add(lblNewLabel_1);
 		
 		//choose non-default location for ffmpeg
 		ffmpegInput = new JFormattedTextField();
 		ffmpegInput.setBounds(10, 172, 398, 20);
-		ffmpegInput.setText("Default");
+		ffmpegInput.setText("ffmpeg");
 		panel.add(ffmpegInput);
 		
 		JLabel fileTypeTag = new JLabel("Output File Type:");

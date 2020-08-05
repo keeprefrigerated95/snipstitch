@@ -69,34 +69,8 @@ public class Editor {
 		
 	}
 	
-	/*
 	//snips out all the clips from the main video
 	public void snip() throws IOException, InterruptedException {
-		
-		for(int i = 0; i < snippets.size(); i++) {
-			//https://stackoverflow.com/questions/9885643/ffmpeg-executed-from-javas-processbuilder-does-not-return-under-windows-7/9885717#9885717
-			//ffmpeg -i 20sec.mp4 -ss 0:0:1 -to 0:0:5 -c copy foobar.mp4
-			String newFile = "foobar" + String.valueOf(i) + ".mp4";
-			ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", videoName, "-ss",
-					snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
-						
-			Process process = processBuilder.inheritIO().start();
-		    process.waitFor();
-			
-			System.out.println("Snip " + i + "\n");
-			
-			//add to the list of files to be concat later
-			filesToStitch.add(newFile);
-			filesToDelete.add(newFile);
-		}
-		
-		//System.out.println(stitchFiles);
-	}
-	*/
-	
-	//snips out all the clips from the main video
-	public void snip() throws IOException, InterruptedException {
-		findFfmpegPath();
 		System.out.println("path: " + ffmpegPath);
 		for(int i = 0; i < snippets.size(); i++) {
 			//https://stackoverflow.com/questions/9885643/ffmpeg-executed-from-javas-processbuilder-does-not-return-under-windows-7/9885717#9885717
@@ -179,37 +153,7 @@ public class Editor {
 		for(int i = 0; i < snippets.size(); i++) {
 			System.out.println(snippets.get(i).getDescription() + " Start: " + snippets.get(i).getStartTime() + " End: " + snippets.get(i).getEndTime() + "\n");
 		}
-	}
-	
-	public void findFfmpegPath() throws IOException {
-		
-		if(ffmpegPath.compareTo("Default") == 0) {
-			System.out.println("Do you work now?");
-			if(OS.isMac() || OS.isUnix()) {	
-				ProcessBuilder builder = new ProcessBuilder("type", "-p", "ffmpeg");
-				builder.redirectErrorStream(true);
-				Process process = builder.start();
-				InputStream is = process.getInputStream();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-				ffmpegPath = reader.readLine();
-			}
-			
-			else if (OS.isWindows()) {
-				System.out.println("why are you like this?");
-				ffmpegPath = "ffmpeg";
-			}
-			
-			else {
-				ffmpegPath = "ffmpeg";
-			}
-		}
-	}
-	
-	public void setNewVideoName(String inputVidName) {
-		newVideoName = inputVidName;
-	}
-	
+	}	
 }
 
 //is it an xml file and video file?
