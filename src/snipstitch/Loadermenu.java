@@ -51,7 +51,7 @@ public class Loadermenu {
 	public Loadermenu() {
 		//the main frame
 		JFrame frame = new JFrame("Snip-Stitch");
-		frame.setBounds(100, 100, 450, 335);
+		frame.setBounds(100, 100, 450, 487);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -62,7 +62,7 @@ public class Loadermenu {
 		panel.setLayout(null);
 		
 		//find the video file
-		JButton loadVideo = new JButton("Find Video");
+		JButton loadVideo = new JButton("Video");
 		loadVideo.setBounds(10, 11, 100, 30);
 		loadVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -83,7 +83,7 @@ public class Loadermenu {
 		panel.add(loadVideo);
 
 		//find xml button
-		JButton findXml = new JButton("Find XML");
+		JButton findXml = new JButton("XML");
 		findXml.setBounds(10, 52, 100, 30);
 		findXml.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -106,8 +106,8 @@ public class Loadermenu {
 		panel.add(findXml);
 				
 		//Edit Video!
-		JButton editVideo = new JButton("Edit Video");
-		editVideo.setBounds(10, 255, 100, 30);
+		JButton editVideo = new JButton("Edit!");
+		editVideo.setBounds(10, 414, 100, 30);
 		editVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editor = new Editor(xmlFilepath, videoFilepath, getFiletype(), getFfmpegPath(), getNewVidName());
@@ -147,8 +147,8 @@ public class Loadermenu {
 		panel.add(editVideo);
 		
 		//the button to go back to the main menu
-		JButton goBack = new JButton("Go Back");
-		goBack.setBounds(324, 255, 100, 30);
+		JButton goBack = new JButton("Back");
+		goBack.setBounds(324, 414, 100, 30);
 		goBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
@@ -167,46 +167,46 @@ public class Loadermenu {
 		
 		//chooses a filetype
 		JLabel lblNewLabel_1 = new JLabel("Path to ffmpeg");
-		lblNewLabel_1.setBounds(10, 147, 262, 14);
+		lblNewLabel_1.setBounds(10, 358, 262, 14);
 		panel.add(lblNewLabel_1);
 		
 		//choose non-default location for ffmpeg
 		ffmpegInput = new JFormattedTextField();
-		ffmpegInput.setBounds(10, 172, 398, 20);
+		ffmpegInput.setBounds(10, 383, 398, 20);
 		ffmpegInput.setText("ffmpeg");
 		panel.add(ffmpegInput);
 		
 		JLabel fileTypeTag = new JLabel("Output File Type:");
-		fileTypeTag.setBounds(10, 93, 100, 14);
+		fileTypeTag.setBounds(10, 151, 100, 14);
 		panel.add(fileTypeTag);
 		
 		mp4Radio = new JRadioButton("mp4");
 		mp4Radio.setSelected(true);
-		mp4Radio.setBounds(10, 114, 50, 23);
+		mp4Radio.setBounds(10, 172, 201, 23);
 		panel.add(mp4Radio);
 		
 		movRadio = new JRadioButton("mov");
-		movRadio.setBounds(60, 114, 50, 23);
+		movRadio.setBounds(10, 198, 201, 23);
 		panel.add(movRadio);
 		
 		wmvRadio = new JRadioButton("wmv");
-		wmvRadio.setBounds(110, 114, 53, 23);
+		wmvRadio.setBounds(10, 224, 201, 23);
 		panel.add(wmvRadio);
 		
 		flvRadio = new JRadioButton("flv");
-		flvRadio.setBounds(160, 114, 43, 23);
+		flvRadio.setBounds(10, 250, 201, 23);
 		panel.add(flvRadio);
 		
 		aviRadio = new JRadioButton("avi");
-		aviRadio.setBounds(200, 114, 43, 23);
+		aviRadio.setBounds(10, 276, 201, 23);
 		panel.add(aviRadio);
 		
 		webmRadio = new JRadioButton("webm");
-		webmRadio.setBounds(240, 114, 60, 23);
+		webmRadio.setBounds(10, 302, 201, 23);
 		panel.add(webmRadio);
 		
 		mkvRadio = new JRadioButton("mkv");
-		mkvRadio.setBounds(298, 114, 50, 23);
+		mkvRadio.setBounds(10, 328, 201, 23);
 		panel.add(mkvRadio);
 		
 		//ButtonGroup fileTypes = new ButtonGroup();
@@ -219,14 +219,14 @@ public class Loadermenu {
 		fileTypes.add(mkvRadio);
 		
 		vidNameLabel = new JLabel("Name the new Video");
-		vidNameLabel.setBounds(9, 198, 118, 14);
+		vidNameLabel.setBounds(10, 95, 118, 14);
 		panel.add(vidNameLabel);
 		
 		fileInput = new JFormattedTextField();
-		fileInput.setBounds(10, 223, 398, 20);
+		fileInput.setBounds(10, 120, 398, 20);
 		fileInput.setText("newVideo");
 		panel.add(fileInput);
-		
+		fileInput.setColumns(10);
 	}
 	
 	//methods

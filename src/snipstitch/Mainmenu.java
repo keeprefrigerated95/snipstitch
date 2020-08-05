@@ -47,18 +47,18 @@ public class Mainmenu {
 				});
 				panel.add(loaderButton);
 				
-				/*
+				
 				//go to settings
-				JButton settingsButton = new JButton("Settings");
+				JButton settingsButton = new JButton("Help");
 				settingsButton.setBounds(158, 149, 100, 30);
 				settingsButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						//frame.setVisible(false);
-						//Loadermenu loaderMenu = new Loadermenu();
+						frame.setVisible(false);
+						HelpWindow helpWindow = new HelpWindow();
 					}
 				});
 				panel.add(settingsButton);
-				*/				
+								
 			}
 		});	
 	}

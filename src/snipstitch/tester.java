@@ -53,7 +53,7 @@ public class tester {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 335);
+		frame.setBounds(100, 100, 450, 487);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -72,12 +72,12 @@ public class tester {
 				
 		//Edit Video!
 		JButton editVideo = new JButton("Edit Video");
-		editVideo.setBounds(10, 255, 100, 30);
+		editVideo.setBounds(10, 414, 100, 30);
 		panel.add(editVideo);
 		
 		//the button to go back to the main menu
 		JButton goBack = new JButton("Go Back");
-		goBack.setBounds(324, 255, 100, 30);
+		goBack.setBounds(324, 414, 100, 30);
 		panel.add(goBack);
 		
 		//displays chosen video file
@@ -91,52 +91,52 @@ public class tester {
 		panel.add(chosenXml);
 		
 		JLabel lblNewLabel_1 = new JLabel("Non-Default ffmpeg directory (probably not needed)");
-		lblNewLabel_1.setBounds(10, 147, 262, 14);
+		lblNewLabel_1.setBounds(10, 358, 262, 14);
 		panel.add(lblNewLabel_1);
 		
 		JLabel fileTypeTag = new JLabel("Output File Type:");
-		fileTypeTag.setBounds(10, 93, 100, 14);
+		fileTypeTag.setBounds(10, 151, 100, 14);
 		panel.add(fileTypeTag);
 		
 		JFormattedTextField ffmpegInput = new JFormattedTextField();
-		ffmpegInput.setBounds(10, 172, 398, 20);
+		ffmpegInput.setBounds(10, 383, 398, 20);
 		panel.add(ffmpegInput);
 		
 		JRadioButton mp4Radio = new JRadioButton("mp4");
 		mp4Radio.setSelected(true);
-		mp4Radio.setBounds(10, 114, 45, 23);
+		mp4Radio.setBounds(10, 172, 201, 23);
 		panel.add(mp4Radio);
 		
 		JRadioButton movRadio = new JRadioButton("mov");
-		movRadio.setBounds(57, 114, 45, 23);
+		movRadio.setBounds(10, 198, 201, 23);
 		panel.add(movRadio);
 		
 		JRadioButton wmvRadio = new JRadioButton("wmv");
-		wmvRadio.setBounds(104, 114, 50, 23);
+		wmvRadio.setBounds(10, 224, 201, 23);
 		panel.add(wmvRadio);
 		
 		JRadioButton flvRadio = new JRadioButton("flv");
-		flvRadio.setBounds(157, 114, 37, 23);
+		flvRadio.setBounds(10, 250, 201, 23);
 		panel.add(flvRadio);
 		
 		JRadioButton aviRadio = new JRadioButton("avi");
-		aviRadio.setBounds(196, 114, 45, 23);
+		aviRadio.setBounds(10, 276, 201, 23);
 		panel.add(aviRadio);
 		
 		JRadioButton webmRadio = new JRadioButton("webm");
-		webmRadio.setBounds(243, 114, 53, 23);
+		webmRadio.setBounds(10, 302, 201, 23);
 		panel.add(webmRadio);
 		
 		JRadioButton mkvRadio = new JRadioButton("mkv");
-		mkvRadio.setBounds(342, 114, 45, 23);
+		mkvRadio.setBounds(10, 328, 201, 23);
 		panel.add(mkvRadio);
 		
 		JLabel vidNameLabel = new JLabel("New Video Name");
-		vidNameLabel.setBounds(9, 198, 118, 14);
+		vidNameLabel.setBounds(10, 95, 118, 14);
 		panel.add(vidNameLabel);
 		
 		vidInputFeild = new JTextField();
-		vidInputFeild.setBounds(10, 223, 398, 20);
+		vidInputFeild.setBounds(10, 120, 398, 20);
 		panel.add(vidInputFeild);
 		vidInputFeild.setColumns(10);
 		
