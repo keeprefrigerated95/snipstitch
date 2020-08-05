@@ -16,14 +16,20 @@ public class Editor {
 	String stitchFiles = new String("concat:\"");
 	Vector<String> filesToStitch = new Vector<>();
 	Vector<String> filesToDelete = new Vector<>();
+	String fileType = new String();
+	String newVideoName = new String("newVideo");
+	String ffmpegPath = new String();
 	
 	public Editor () {
 		
 	}
 	
-	public Editor(String newXml, String newVideo) {
+	public Editor(String newXml, String newVideo, String newFileType, String ffmpegInput, String newNewVideoName) {
 		xmlName = newXml;
 		videoName = newVideo;
+		fileType = newFileType;
+		ffmpegPath = ffmpegInput;
+		newVideoName = newNewVideoName;
 	}
 	
 	//opens xml and loads to snippets vector
@@ -90,55 +96,19 @@ public class Editor {
 	
 	//snips out all the clips from the main video
 	public void snip() throws IOException, InterruptedException {
-		
+		findFfmpegPath();
+		System.out.println("path: " + ffmpegPath);
 		for(int i = 0; i < snippets.size(); i++) {
 			//https://stackoverflow.com/questions/9885643/ffmpeg-executed-from-javas-processbuilder-does-not-return-under-windows-7/9885717#9885717
 			//ffmpeg -i 20sec.mp4 -ss 0:0:1 -to 0:0:5 -c copy foobar.mp4
-			String newFile = "foobar" + String.valueOf(i) + ".mp4";
+			String newFile = "foobar" + String.valueOf(i) + fileType;
 			//https://superuser.com/questions/42537/is-there-any-sudo-command-for-windows
-			ProcessBuilder processBuilder = new ProcessBuilder(Settings.ffmpegPath, "-i", videoName, "-ss",
+			ProcessBuilder processBuilder = new ProcessBuilder(ffmpegPath, "-i", videoName, "-ss",
 					snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
 						
 			Process process = processBuilder.inheritIO().start();
 		    process.waitFor();
-			/*
-			if(OS.isWindows()) {
-				//https://superuser.com/questions/42537/is-there-any-sudo-command-for-windows
-				ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-i", videoName, "-ss",
-						snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
-							
-				Process process = processBuilder.inheritIO().start();
-			    process.waitFor();
-			    System.out.println("Win Snip " + i + "\n");
-			}
 			
-			else if (OS.isMac()) {
-				//FFMPEG LOCATION: /usr/local/Cellar/ffmpeg
-				//THE ERROR: sudo: ffmpeg: command not found
-				//ERROR W/OUT SUDO: java.io.IOException: Cannot run program "ffmpeg": error=2, No such file or directory
-				ProcessBuilder processBuilder = new ProcessBuilder("sudo", "-S", "ffmpeg", "-f", videoName, "-ss",
-						snippets.get(i).getStartTime(), "-to", snippets.get(i).getEndTime(), newFile);
-				
-				Process process = processBuilder.inheritIO().start();
-			    process.waitFor();
-			    System.out.println("Mac Snip " + i + "\n");
-			}
-			
-			else if (OS.isUnix()) {
-				System.out.println("Your operating system is not supported");
-				//TODO
-				//need to figure out if deb/red hat/whatever are different
-			}
-			
-			else if (OS.isSolaris()) {
-				System.out.println("Your operating system is not supported yet");
-				//TODO probably won't do
-			}
-			
-			else {
-				 System.out.println("Your operating system is not supported");
-			}
-			*/
 			//add to the list of files to be concat later
 			filesToStitch.add(newFile);
 			filesToDelete.add(newFile);
@@ -147,6 +117,7 @@ public class Editor {
 		//System.out.println(stitchFiles);
 	}
 	
+	//stitch the snippets back together
 	public void stitch() throws IOException, InterruptedException {
 		//create txt file with mp4 files to concatenate
 		//https://www.w3schools.com/java/java_files_create.asp
@@ -175,8 +146,9 @@ public class Editor {
 		      }
 		//concatenate the files
 		//https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
-		ProcessBuilder processBuilder = new ProcessBuilder("ffmpeg", "-f", "concat", "-safe",
-				 "0", "-i", fileName, "-c", "copy", "finalVideo.mp4");
+		String wholeFile = newVideoName + fileType;
+		ProcessBuilder processBuilder = new ProcessBuilder(ffmpegPath, "-f", "concat", "-safe",
+				 "0", "-i", fileName, "-c", "copy", wholeFile);
 		Process process = processBuilder.inheritIO().start();
 		process.waitFor();
 		
@@ -199,11 +171,45 @@ public class Editor {
 		}
 	}
 	
+	public void setFileType(String newType) {
+		fileType = newType;
+	}
+	
 	public void displaySnippets() {
 		for(int i = 0; i < snippets.size(); i++) {
 			System.out.println(snippets.get(i).getDescription() + " Start: " + snippets.get(i).getStartTime() + " End: " + snippets.get(i).getEndTime() + "\n");
 		}
 	}
+	
+	public void findFfmpegPath() throws IOException {
+		
+		if(ffmpegPath.compareTo("Default") == 0) {
+			System.out.println("Do you work now?");
+			if(OS.isMac() || OS.isUnix()) {	
+				ProcessBuilder builder = new ProcessBuilder("type", "-p", "ffmpeg");
+				builder.redirectErrorStream(true);
+				Process process = builder.start();
+				InputStream is = process.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+				ffmpegPath = reader.readLine();
+			}
+			
+			else if (OS.isWindows()) {
+				System.out.println("why are you like this?");
+				ffmpegPath = "ffmpeg";
+			}
+			
+			else {
+				ffmpegPath = "ffmpeg";
+			}
+		}
+	}
+	
+	public void setNewVideoName(String inputVidName) {
+		newVideoName = inputVidName;
+	}
+	
 }
 
 //is it an xml file and video file?

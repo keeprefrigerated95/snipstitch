@@ -15,11 +15,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileSystemView;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -33,11 +36,22 @@ public class Loadermenu {
 	String videoFilepath = new String("NONE");
 	JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 	Editor editor;
+	JRadioButton mp4Radio;
+	JRadioButton movRadio;
+	JRadioButton wmvRadio;
+	JRadioButton flvRadio;
+	JRadioButton aviRadio;
+	JRadioButton webmRadio;
+	JRadioButton mkvRadio;
+	JFormattedTextField ffmpegInput;
+	JFormattedTextField fileInput;
+	JLabel vidNameLabel;
 	
+	ButtonGroup fileTypes = new ButtonGroup();
 	public Loadermenu() {
 		//the main frame
 		JFrame frame = new JFrame("Snip-Stitch");
-		frame.setBounds(100, 100, 487, 186);
+		frame.setBounds(100, 100, 450, 335);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -93,10 +107,10 @@ public class Loadermenu {
 				
 		//Edit Video!
 		JButton editVideo = new JButton("Edit Video");
-		editVideo.setBounds(10, 93, 100, 30);
+		editVideo.setBounds(10, 255, 100, 30);
 		editVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				editor = new Editor(xmlFilepath, videoFilepath);
+				editor = new Editor(xmlFilepath, videoFilepath, getFiletype(), getFfmpegPath(), getNewVidName());
 				//load the snippets
 				try {
 					editor.uploadSnippets();
@@ -134,7 +148,7 @@ public class Loadermenu {
 		
 		//the button to go back to the main menu
 		JButton goBack = new JButton("Go Back");
-		goBack.setBounds(146, 93, 100, 30);
+		goBack.setBounds(324, 255, 100, 30);
 		goBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
@@ -150,5 +164,113 @@ public class Loadermenu {
 		//displays the chosen xml file
 		chosenXml.setBounds(146, 60, 301, 14);
 		panel.add(chosenXml);
+		
+		//chooses a filetype
+		JLabel lblNewLabel_1 = new JLabel("Non-Default ffmpeg directory (probably not needed)");
+		lblNewLabel_1.setBounds(10, 147, 262, 14);
+		panel.add(lblNewLabel_1);
+		
+		//choose non-default location for ffmpeg
+		ffmpegInput = new JFormattedTextField();
+		ffmpegInput.setBounds(10, 172, 398, 20);
+		ffmpegInput.setText("Default");
+		panel.add(ffmpegInput);
+		
+		JLabel fileTypeTag = new JLabel("Output File Type:");
+		fileTypeTag.setBounds(10, 93, 100, 14);
+		panel.add(fileTypeTag);
+		
+		mp4Radio = new JRadioButton("mp4");
+		mp4Radio.setSelected(true);
+		mp4Radio.setBounds(10, 114, 50, 23);
+		panel.add(mp4Radio);
+		
+		movRadio = new JRadioButton("mov");
+		movRadio.setBounds(60, 114, 50, 23);
+		panel.add(movRadio);
+		
+		wmvRadio = new JRadioButton("wmv");
+		wmvRadio.setBounds(110, 114, 53, 23);
+		panel.add(wmvRadio);
+		
+		flvRadio = new JRadioButton("flv");
+		flvRadio.setBounds(160, 114, 43, 23);
+		panel.add(flvRadio);
+		
+		aviRadio = new JRadioButton("avi");
+		aviRadio.setBounds(200, 114, 43, 23);
+		panel.add(aviRadio);
+		
+		webmRadio = new JRadioButton("webm");
+		webmRadio.setBounds(240, 114, 60, 23);
+		panel.add(webmRadio);
+		
+		mkvRadio = new JRadioButton("mkv");
+		mkvRadio.setBounds(298, 114, 50, 23);
+		panel.add(mkvRadio);
+		
+		//ButtonGroup fileTypes = new ButtonGroup();
+		fileTypes.add(mp4Radio);
+		fileTypes.add(movRadio);
+		fileTypes.add(wmvRadio);
+		fileTypes.add(flvRadio);
+		fileTypes.add(aviRadio);
+		fileTypes.add(webmRadio);
+		fileTypes.add(mkvRadio);
+		
+		vidNameLabel = new JLabel("Name the new Video");
+		vidNameLabel.setBounds(9, 198, 118, 14);
+		panel.add(vidNameLabel);
+		
+		fileInput = new JFormattedTextField();
+		fileInput.setBounds(10, 223, 398, 20);
+		fileInput.setText("newVideo");
+		panel.add(fileInput);
+		
 	}
+	
+	//methods
+	
+	String getFiletype() {
+		String output = new String();
+		
+		if(mp4Radio.isSelected()) {
+			output = ".mp4";
+		}
+		
+		else if (movRadio.isSelected()) {
+			output = ".mov";
+		}
+		
+		else if (wmvRadio.isSelected()) {
+			output = ".wmv";
+		}
+		
+		else if (flvRadio.isSelected()) {
+			output = ".flv";
+		}
+		
+		else if (aviRadio.isSelected()) {
+			output = ".avi";
+		}
+		
+		else if (webmRadio.isSelected()) {
+			output = ".webm";
+		}
+		
+		else if (mkvRadio.isSelected()) {
+			output = ".mkv";
+		}
+		
+		return output;
+	}
+	
+	String getFfmpegPath() {
+		return ffmpegInput.getText();
+	}
+	
+	String getNewVidName() {
+		return fileInput.getText();
+	}
+	
 }
