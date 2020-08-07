@@ -41,6 +41,30 @@ public class Snippet {
 		return description;
 	}
 	
+	public int getStartHour() {
+		return startHour;
+	}
+	
+	public int getStartMinute() {
+		return startMinute;
+	}
+	
+	public int getStartSecond() {
+		return startSecond;
+	}
+	
+	public int getEndHour() {
+		return endHour;
+	}
+	
+	public int getEndMinute() {
+		return endMinute;
+	}
+	
+	public int getEndSecond() {
+		return endSecond;
+	}
+	
 	//setters
 	public void setStartHour(int newStartHour) {
 		startHour = newStartHour;

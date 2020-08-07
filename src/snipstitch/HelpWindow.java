@@ -1,6 +1,8 @@
 package snipstitch;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -46,12 +48,28 @@ public class HelpWindow {
 						+ "if Snip-Stitch cannot find ffmpeg, you'll have to type in its filepath directly. If you don't know where it is you can enter:\n\n"
 						+ "type ffmpeg\n\n"
 						+ "into your terminal if you are using Mac or Linux.\n"
-						+ "I don't know how to find it in Windows yet, but I haven't had any problems running it in Windows either, sorry");
+						+ "I don't know how to find it in Windows...sorry...\n\n"
+						+ "Don't use this for anything illeagal. I take no responisbility for your actions");
 				txtpnTextHere.setBounds(10, 11, 781, 490);
 				panel.add(txtpnTextHere);
 				
 				JButton goBackButton = new JButton("Back");
 				goBackButton.setBounds(10, 520, 89, 23);
+				
+				goBackButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						frame.setVisible(false);
+						
+						SwingUtilities.invokeLater(new Runnable() {
+
+							@Override
+							public void run() {
+								MainMenu mainMenu= new MainMenu();
+							}
+						});
+					}
+				});		
+				
 				panel.add(goBackButton);
 			}
 		});

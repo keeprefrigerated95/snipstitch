@@ -8,12 +8,10 @@
 package snipstitch;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -23,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileSystemView;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -46,12 +45,13 @@ public class Loadermenu {
 	JFormattedTextField ffmpegInput;
 	JFormattedTextField fileInput;
 	JLabel vidNameLabel;
+	JLabel statusLabel;
 	
 	ButtonGroup fileTypes = new ButtonGroup();
 	public Loadermenu() {
 		//the main frame
 		JFrame frame = new JFrame("Snip-Stitch");
-		frame.setBounds(100, 100, 450, 487);
+		frame.setBounds(100, 100, 450, 523);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -110,38 +110,7 @@ public class Loadermenu {
 		editVideo.setBounds(10, 414, 100, 30);
 		editVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				editor = new Editor(xmlFilepath, videoFilepath, getFiletype(), getFfmpegPath(), getNewVidName());
-				//load the snippets
-				try {
-					editor.uploadSnippets();
-				} catch (ParserConfigurationException | SAXException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				//snip out the clips from the original video
-				try {
-					editor.snip();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				//stitch the snipped slips back together
-				try {
-					editor.stitch();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				//delete unwanted files
-				editor.cleanup();
+				snipAndStitch();
 			}
 		});
 		panel.add(editVideo);
@@ -152,7 +121,7 @@ public class Loadermenu {
 		goBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
-				Mainmenu mainMenu = new Mainmenu();
+				MainMenu mainMenu = new MainMenu();
 			}
 		});
 		panel.add(goBack);
@@ -161,7 +130,7 @@ public class Loadermenu {
 		chosenVideo.setBounds(146, 19, 301, 14);
 		panel.add(chosenVideo);
 				
-		//displays the chosen xml file
+		//displays the chosen XML file
 		chosenXml.setBounds(146, 60, 301, 14);
 		panel.add(chosenXml);
 		
@@ -222,11 +191,16 @@ public class Loadermenu {
 		vidNameLabel.setBounds(10, 95, 118, 14);
 		panel.add(vidNameLabel);
 		
+		//the name of the new file that will be created
 		fileInput = new JFormattedTextField();
 		fileInput.setBounds(10, 120, 398, 20);
 		fileInput.setText("newVideo");
 		panel.add(fileInput);
 		fileInput.setColumns(10);
+		
+        statusLabel = new JLabel("Ready...");
+        statusLabel.setBounds(20, 455, 404, 14);
+        panel.add(statusLabel);
 	}
 	
 	//methods
@@ -271,6 +245,65 @@ public class Loadermenu {
 	
 	String getNewVidName() {
 		return fileInput.getText();
+	}
+	
+	private void snipAndStitch() {
+		SwingWorker<Void, String> worker = new SwingWorker<Void, String> () {
+
+			@Override
+			protected Void doInBackground() throws Exception {
+				
+				//UploadDisplay snippetD = new UploadDisplay("Loading Snippets");
+				editor = new Editor(xmlFilepath, videoFilepath, getFiletype(), getFfmpegPath(), getNewVidName());
+				//load the snippets
+				publish("Uploading Snippets from XML...");
+				try {
+					editor.uploadSnippets();
+				} catch (ParserConfigurationException | SAXException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				//UploadDisplay snipD = new UploadDisplay("Loading...\nThis could take several minutes");
+				//snip out the clips from the original video
+				publish("Snipping the Source Video (this takes the longest)...");
+				try {
+					editor.snip();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				//stitch the snipped slips back together
+				publish("Stitching.... If you're stuck here check for a duplicate file.");
+				try {
+					editor.stitch();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				//delete unwanted files
+				publish("Cleaning up unwanted files...");
+				editor.cleanup();
+				//UploadDisplay snipF = new UploadDisplay("Finished!");
+				publish("All Done! :)");
+				return null;
+			}
+
+			@Override
+			protected void process(List<String> chunks) {
+				// TODO Auto-generated method stub
+				//super.process(chunks);
+				statusLabel.setText(chunks.get(chunks.size() - 1));
+			}
+		};
+		worker.execute();
 	}
 	
 }

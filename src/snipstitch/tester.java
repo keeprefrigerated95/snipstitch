@@ -10,6 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
@@ -53,7 +54,7 @@ public class tester {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 487);
+		frame.setBounds(100, 100, 450, 523);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -139,6 +140,17 @@ public class tester {
 		vidInputFeild.setBounds(10, 120, 398, 20);
 		panel.add(vidInputFeild);
 		vidInputFeild.setColumns(10);
+		
+		JProgressBar pb = new JProgressBar();
+        pb.setMinimum(0);
+        pb.setMaximum(100);
+        pb.setStringPainted(true);
+        
+        panel.add(pb);
+        
+        JLabel statusLabel = new JLabel("Ready...");
+        statusLabel.setBounds(20, 455, 404, 14);
+        panel.add(statusLabel);
 		
 	}
 }

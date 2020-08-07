@@ -5,12 +5,20 @@ import java.util.Vector;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.*;
+
+import java.awt.BorderLayout;
 import java.io.*;
 
 public class Editor {
 	OperatingSys OS;
 	Vector<Snippet> snippets = new Vector<>();
+	Vector<Snippet> unSnippets = new Vector<>();
 	String xmlName;
 	String videoName;
 	String stitchFiles = new String("concat:\"");
@@ -19,9 +27,9 @@ public class Editor {
 	String fileType = new String();
 	String newVideoName = new String("newVideo");
 	String ffmpegPath = new String();
-	
+	String statusMessage = new String("Standby");
+	String uploadInfo = new String("ready...\n");
 	public Editor () {
-		
 	}
 	
 	public Editor(String newXml, String newVideo, String newFileType, String ffmpegInput, String newNewVideoName) {
@@ -30,6 +38,36 @@ public class Editor {
 		fileType = newFileType;
 		ffmpegPath = ffmpegInput;
 		newVideoName = newNewVideoName;
+		
+		SwingUtilities.invokeLater(new Runnable() {
+
+			JFrame frame;
+			JPanel panel;
+			JScrollPane scrollPane;
+			JTextArea allMessages;
+			String messageString;
+			
+			@Override
+			public void run() {
+				//frame = new JFrame("Snip-Stitch Test");
+				frame.setBounds(100, 100, 450, 300);
+				frame.setResizable(false);
+				frame.setVisible(true);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				
+				panel = new JPanel();
+				frame.getContentPane().add(panel, BorderLayout.CENTER);
+				panel.setLayout(null);
+				
+				scrollPane = new JScrollPane();
+				frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+				
+				allMessages = new JTextArea(messageString);
+				scrollPane.setViewportView(allMessages);
+			}
+		});
+		
+		
 	}
 	
 	//opens xml and loads to snippets vector
@@ -40,10 +78,12 @@ public class Editor {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		    Document doc = dBuilder.parse(xmlFile);
+
 		    //optional, but recommended
 		    //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		    doc.getDocumentElement().normalize(); 
-		    NodeList nodeList = doc.getElementsByTagName("snippet");  
+		    NodeList nodeList = doc.getElementsByTagName("snippet");
+		    
 		    for (int i = 0; i < nodeList.getLength(); i++) {
 		    	Node node = nodeList.item(i);
 		    	if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -66,13 +106,34 @@ public class Editor {
 		} catch (Exception e) {
 	        e.printStackTrace();
 	       }
-		
+		/*
+		//invert the snippets to prep for ffmpeg
+		for(int i = 0; i < unSnippets.size(); i++) {
+			String snippetName = new String("snippet " + (i + 1));
+			if(unSnippets.get(i).getStartHour() == 0
+					&& unSnippets.get(i).getStartMinute() == 0
+					&& unSnippets.get(i).getStartSecond() == 0 && i == 0) {
+				snippets.add(new Snippet(snippetName, unSnippets.get(i).getEndSecond(), unSnippets.get(i).getEndMinute(), unSnippets.get(i).getEndHour(),
+					unSnippets.get(i + 1).getStartSecond(), unSnippets.get(i + 1).getStartMinute(), unSnippets.get(i + 1).getStartHour()));
+			}
+			
+			else if(i == 0) {
+				snippets.add(new Snippet(snippetName, 0, 0, 0,
+						unSnippets.get(i).getStartSecond(), unSnippets.get(i).getStartMinute(), unSnippets.get(i).getStartHour()));	
+			}
+			
+			else {
+				snippets.add(new Snippet(snippetName, unSnippets.get(i).getEndSecond(), unSnippets.get(i).getEndMinute(), unSnippets.get(i).getEndHour(),
+						unSnippets.get(i + 1).getStartSecond(), unSnippets.get(i + 1).getStartMinute(), unSnippets.get(i + 1).getStartHour()));
+			}
+		}
+		*/	
 	}
-	
 	//snips out all the clips from the main video
 	public void snip() throws IOException, InterruptedException {
-		System.out.println("path: " + ffmpegPath);
+		
 		for(int i = 0; i < snippets.size(); i++) {
+			
 			//https://stackoverflow.com/questions/9885643/ffmpeg-executed-from-javas-processbuilder-does-not-return-under-windows-7/9885717#9885717
 			//ffmpeg -i 20sec.mp4 -ss 0:0:1 -to 0:0:5 -c copy foobar.mp4
 			String newFile = "foobar" + String.valueOf(i) + fileType;
@@ -95,6 +156,7 @@ public class Editor {
 	public void stitch() throws IOException, InterruptedException {
 		//create txt file with mp4 files to concatenate
 		//https://www.w3schools.com/java/java_files_create.asp
+		//uploadDisplay.appendToStatus("Stitching up the snippets\n");
 		String fileName = "snippetsList.txt";
 		filesToDelete.add(fileName);
 		try {
@@ -115,7 +177,6 @@ public class Editor {
 		      writer.close();
 		      
 		} catch (IOException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		      }
 		//concatenate the files
@@ -125,13 +186,11 @@ public class Editor {
 				 "0", "-i", fileName, "-c", "copy", wholeFile);
 		Process process = processBuilder.inheritIO().start();
 		process.waitFor();
-		
-		System.out.println("All done!");
 	}
 	
 	//delete unwanted files
 	public void cleanup() {
-		
+		System.out.println("Cleaning up");
 		for(int i = 0; i < filesToDelete.size(); i++) {
 			File deleteThis = new File(filesToDelete.get(i));
 			

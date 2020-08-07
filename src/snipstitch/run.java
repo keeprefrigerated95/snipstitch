@@ -1,16 +1,8 @@
 package snipstitch;
 
 
-import java.awt.EventQueue;
-import java.io.*;
-import java.util.Scanner;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.swing.SwingUtilities;
 
-import org.xml.sax.SAXException;
-
-import javax.swing.JFileChooser;
 
 public class run {
 	
@@ -18,6 +10,17 @@ public class run {
 	}
 	
 	public static void main (String[] args) {
-		Mainmenu mainmenu = new Mainmenu();		
+		
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				MainMenu mainmenu = new MainMenu();		
+			}
+			
+		});
+		
+		
 	}
 }
