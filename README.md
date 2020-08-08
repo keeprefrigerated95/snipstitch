@@ -1,4 +1,7 @@
 # snipstitch
+
+Snip-Stitch takes clips from a video of your choosing and then concatenates them into a new video
+
 ****************************XML Files****************************
 XML files are used to indicate which clips from the video you want to keep, not the ones that will be cut out.
 It must be formatted like so:

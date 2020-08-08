@@ -32,7 +32,8 @@ public class HelpWindow {
 				frame.setIconImage(icon.getImage());
 				
 				JTextPane txtpnTextHere = new JTextPane();
-				txtpnTextHere.setText("****************************XML Files****************************\n"
+				txtpnTextHere.setText("Snip-Stitch takes clips from a video of your choosing and then concatenates them into a new video\n\n"
+						+ "****************************XML Files****************************\n"
 						+ "XML files are used to indicate which clips from the video you want to keep, not the ones that will be cut out.\n"
 						+ "It must be formatted like so:\n\n"
 						+ "<edits>\n"
@@ -50,11 +51,11 @@ public class HelpWindow {
 						+ "You can view and edit XML files in your basic Notepad or Text editor, or something more intuitive like notepad++ or visual studio code\n\n"
 						+ "****************************ffmpeg****************************\n"
 						+ "You need ffmpeg for this to work. If you don't have it, download it here: https://ffmpeg.org/download.html\n"
-						+ "Some computers have it by default. To check, type ffmpeg into your terminal (Mac/Linux) or command prompt (Windows)"
-						+ "If you have ffmpeg and Snip-Stitch cannot find it, you'll have to type in its filepath directly. If you don't know where it is you can enter:\n\n"
-						+ "type ffmpeg\n\n"
+						+ "Some computers have it by default. To check, type ffmpeg into your terminal (Mac/Linux) or command prompt (Windows). "
+						+ "If you have ffmpeg and Snip-Stitch cannot find it, you can type in its filepath directly. If you don't know where it is you can enter: type ffmpeg, "
 						+ "into your terminal if you are using Mac or Linux.\n"
-						+ "For windows you may just have to add it to the windows path. Here's a good tutorial: https://windowsloop.com/install-ffmpeg-windows-10/#add-ffmpeg-to-Windows-path");
+						+ "For windows you may just have to add it to the windows path. Here's a good tutorial: https://windowsloop.com/install-ffmpeg-windows-10/#add-ffmpeg-to-Windows-path\n\n"
+						+ "Don't do anything illeagal with this please. I take no responsibility for how this is used, I'm just putting it out there.");
 				txtpnTextHere.setBounds(10, 11, 781, 490);
 				panel.add(txtpnTextHere);
 				
