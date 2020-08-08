@@ -19,8 +19,6 @@ public class run {
 				MainMenu mainmenu = new MainMenu();		
 			}
 			
-		});
-		
-		
+		});	
 	}
 }

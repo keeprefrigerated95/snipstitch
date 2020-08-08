@@ -28,6 +28,9 @@ public class MainMenu {
 				frame.getContentPane().add(panel, BorderLayout.CENTER);
 				panel.setLayout(null);
 				
+				ImageIcon icon = new ImageIcon("scissors2.png");
+				frame.setIconImage(icon.getImage());
+				
 				//welcome message
 				JLabel welcome = new JLabel("Welcome to Snip-Stitch");
 				welcome.setFont(new Font("Verdana", Font.PLAIN, 23));

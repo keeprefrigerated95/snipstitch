@@ -8,12 +8,14 @@
 package snipstitch;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -49,6 +51,7 @@ public class Loadermenu {
 	
 	ButtonGroup fileTypes = new ButtonGroup();
 	public Loadermenu() {
+		
 		//the main frame
 		JFrame frame = new JFrame("Snip-Stitch");
 		frame.setBounds(100, 100, 450, 523);
@@ -60,6 +63,10 @@ public class Loadermenu {
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
+		
+		//Image image = Toolkit.getDefaultToolKit().getImage(getClass().getResource("scissors2.png"));
+		ImageIcon icon = new ImageIcon("scissors2.png");
+		frame.setIconImage(icon.getImage());
 		
 		//find the video file
 		JButton loadVideo = new JButton("Video");
@@ -252,7 +259,7 @@ public class Loadermenu {
 
 			@Override
 			protected Void doInBackground() throws Exception {
-				
+							
 				//UploadDisplay snippetD = new UploadDisplay("Loading Snippets");
 				editor = new Editor(xmlFilepath, videoFilepath, getFiletype(), getFfmpegPath(), getNewVidName());
 				//load the snippets

@@ -149,7 +149,6 @@ public class Editor {
 			filesToDelete.add(newFile);
 			
 		}
-		//System.out.println(stitchFiles);
 	}
 	
 	//stitch the snippets back together
@@ -190,7 +189,6 @@ public class Editor {
 	
 	//delete unwanted files
 	public void cleanup() {
-		System.out.println("Cleaning up");
 		for(int i = 0; i < filesToDelete.size(); i++) {
 			File deleteThis = new File(filesToDelete.get(i));
 			
