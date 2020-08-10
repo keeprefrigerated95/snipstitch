@@ -1,7 +1,6 @@
 /***********************************************************
  * MAIN MENU
- * The menu that the user will so on opening the program
- * will have options to edit a video, or make an xml file
+ * Goes to the loading menu and a help meny
  ***********************************************************/
 package snipstitch;
 
@@ -18,16 +17,19 @@ public class MainMenu {
 			@Override
 			public void run() {
 				
+				//the main frame
 				JFrame frame = new JFrame("Snip-Stitch");
 				frame.setBounds(100, 100, 450, 300);
 				frame.setResizable(false);
 				frame.setVisible(true);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				
+				//the main panel
 				JPanel panel = new JPanel();
 				frame.getContentPane().add(panel, BorderLayout.CENTER);
 				panel.setLayout(null);
 				
+				//replaces the default java icon
 				ImageIcon icon = new ImageIcon("scissors2.png");
 				frame.setIconImage(icon.getImage());
 				
@@ -48,7 +50,6 @@ public class MainMenu {
 
 							@Override
 							public void run() {
-								//Loadermenu loaderMenu = new Loadermenu();
 							}
 						});
 						

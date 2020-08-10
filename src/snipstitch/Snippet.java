@@ -1,5 +1,10 @@
-package snipstitch;
+/*****************************************************
+ * SNIPPET
+ * something like a timestamp. It has a start time, and
+ * and end time for an individual clip
+ ******************************************************/
 
+package snipstitch;
 
 public class Snippet {
 	

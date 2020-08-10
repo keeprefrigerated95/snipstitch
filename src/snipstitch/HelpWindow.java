@@ -1,3 +1,8 @@
+/***************************************************************
+ * HELP WINDOW
+ * Just a window with some instructions on how to use the program
+ * *************************************************************/
+
 package snipstitch;
 
 import java.awt.BorderLayout;
@@ -34,7 +39,7 @@ public class HelpWindow {
 				JTextPane txtpnTextHere = new JTextPane();
 				txtpnTextHere.setText("Snip-Stitch takes clips from a video of your choosing and then concatenates them into a new video\n\n"
 						+ "****************************XML Files****************************\n"
-						+ "XML files are used to indicate which clips from the video you want to keep, not the ones that will be cut out.\n"
+						+ "XML files are used to indicate which clips from the video you want to keep, not the ones that will be cut out\n"
 						+ "It must be formatted like so:\n\n"
 						+ "<edits>\n"
 						+ "    <snippet>\n"

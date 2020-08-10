@@ -1,3 +1,10 @@
+/*************************************************************
+ * EDITOR
+ * the actual code for loading an xml, using it to make 
+ * copies of sections of the video, make a concatenated copy of
+ * all of the new clips and then delete all of the unwanted files
+ ****************************************************************/
+
 package snipstitch;
 
 import java.util.Vector;
@@ -5,14 +12,8 @@ import java.util.Vector;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.xml.parsers.*;
-
-import java.awt.BorderLayout;
 import java.io.*;
 
 public class Editor {
@@ -40,34 +41,11 @@ public class Editor {
 		newVideoName = newNewVideoName;
 		
 		SwingUtilities.invokeLater(new Runnable() {
-
-			JFrame frame;
-			JPanel panel;
-			JScrollPane scrollPane;
-			JTextArea allMessages;
-			String messageString;
-			
+		
 			@Override
 			public void run() {
-				//frame = new JFrame("Snip-Stitch Test");
-				frame.setBounds(100, 100, 450, 300);
-				frame.setResizable(false);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				
-				panel = new JPanel();
-				frame.getContentPane().add(panel, BorderLayout.CENTER);
-				panel.setLayout(null);
-				
-				scrollPane = new JScrollPane();
-				frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-				
-				allMessages = new JTextArea(messageString);
-				scrollPane.setViewportView(allMessages);
 			}
 		});
-		
-		
 	}
 	
 	//opens xml and loads to snippets vector
@@ -106,28 +84,7 @@ public class Editor {
 		} catch (Exception e) {
 	        e.printStackTrace();
 	       }
-		/*
-		//invert the snippets to prep for ffmpeg
-		for(int i = 0; i < unSnippets.size(); i++) {
-			String snippetName = new String("snippet " + (i + 1));
-			if(unSnippets.get(i).getStartHour() == 0
-					&& unSnippets.get(i).getStartMinute() == 0
-					&& unSnippets.get(i).getStartSecond() == 0 && i == 0) {
-				snippets.add(new Snippet(snippetName, unSnippets.get(i).getEndSecond(), unSnippets.get(i).getEndMinute(), unSnippets.get(i).getEndHour(),
-					unSnippets.get(i + 1).getStartSecond(), unSnippets.get(i + 1).getStartMinute(), unSnippets.get(i + 1).getStartHour()));
-			}
-			
-			else if(i == 0) {
-				snippets.add(new Snippet(snippetName, 0, 0, 0,
-						unSnippets.get(i).getStartSecond(), unSnippets.get(i).getStartMinute(), unSnippets.get(i).getStartHour()));	
-			}
-			
-			else {
-				snippets.add(new Snippet(snippetName, unSnippets.get(i).getEndSecond(), unSnippets.get(i).getEndMinute(), unSnippets.get(i).getEndHour(),
-						unSnippets.get(i + 1).getStartSecond(), unSnippets.get(i + 1).getStartMinute(), unSnippets.get(i + 1).getStartHour()));
-			}
-		}
-		*/	
+
 	}
 	//snips out all the clips from the main video
 	public void snip() throws IOException, InterruptedException {
@@ -154,8 +111,6 @@ public class Editor {
 	//stitch the snippets back together
 	public void stitch() throws IOException, InterruptedException {
 		//create txt file with mp4 files to concatenate
-		//https://www.w3schools.com/java/java_files_create.asp
-		//uploadDisplay.appendToStatus("Stitching up the snippets\n");
 		String fileName = "snippetsList.txt";
 		filesToDelete.add(fileName);
 		try {
@@ -179,7 +134,6 @@ public class Editor {
 		      e.printStackTrace();
 		      }
 		//concatenate the files
-		//https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
 		String wholeFile = newVideoName + fileType;
 		ProcessBuilder processBuilder = new ProcessBuilder(ffmpegPath, "-f", "concat", "-safe",
 				 "0", "-i", fileName, "-c", "copy", wholeFile);
@@ -205,14 +159,4 @@ public class Editor {
 	public void setFileType(String newType) {
 		fileType = newType;
 	}
-	
-	public void displaySnippets() {
-		for(int i = 0; i < snippets.size(); i++) {
-			System.out.println(snippets.get(i).getDescription() + " Start: " + snippets.get(i).getStartTime() + " End: " + snippets.get(i).getEndTime() + "\n");
-		}
-	}	
 }
-
-//is it an xml file and video file?
-//is the xml file formatted correctly?
-//are there times in the xml that don't match up with the video?
